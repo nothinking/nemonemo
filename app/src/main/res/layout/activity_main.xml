@@ -24,4 +24,12 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/first_page_view"
         android:scaleType="fitCenter" />
+
+    <Button
+        android:id="@+id/save_to_gallery_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="갤러리에 저장하기"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>

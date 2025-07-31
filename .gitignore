@@ -1,0 +1,60 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+# Android Studio 관련
+.idea/
+*.iml
+.gradle/
+local.properties
+
+# 빌드 아티팩트
+/build/
+*/build/
+
+# 로그 파일
+*.log
+
+# OS 관련
+.DS_Store
+Thumbs.db
+
+# Keystore (보안상 Git에 올리지 말 것!)
+*.jks
+*.keystore
+
+# 기타 Android
+captures/
+output.json
+
+# NDK 빌드 파일
+.cxx/
+
+# Kotlin/Java 컴파일 파일
+*.class
+
+# 패키징 결과물
+*.apk
+*.ap_
+*.aab
+
+# IntelliJ
+*.iws
+
+# 기타 사용자 설정
+*.swp
+*~
+
+# Firebase 관련
+google-services.json

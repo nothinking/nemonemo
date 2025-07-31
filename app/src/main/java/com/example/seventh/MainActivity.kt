@@ -33,6 +33,11 @@ import android.view.MotionEvent // MotionEvent 추가
 //import androidx.compose.ui.semantics.text
 import androidx.core.view.GestureDetectorCompat // GestureDetectorCompat 추가
 //import androidx.glance.visibility
+import com.example.seventh.data.AppDatabase
+import com.example.seventh.data.ScanHistory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var resultInfo: TextView
@@ -41,7 +46,10 @@ class MainActivity : AppCompatActivity() {
     private var enableGalleryImport = true
 
     private lateinit var saveToGalleryButton: Button
+    private lateinit var saveToHistoryButton: Button
+    private lateinit var historyButton: Button
     private var currentScannedImageUri: Uri? = null
+    private lateinit var database: AppDatabase
 
     // 트리플 탭 감지를 위한 변수
     private lateinit var gestureDetector: GestureDetectorCompat
@@ -56,11 +64,16 @@ class MainActivity : AppCompatActivity() {
         resultInfo = findViewById(R.id.result_info)
         firstPageView = findViewById(R.id.first_page_view)
         saveToGalleryButton = findViewById(R.id.save_to_gallery_button)
+        saveToHistoryButton = findViewById(R.id.save_to_history_button)
+        historyButton = findViewById(R.id.history_button)
+        database = AppDatabase.getDatabase(this)
 
         // 초기에는 resultInfo를 숨김
         resultInfo.visibility = View.GONE
 
         saveToGalleryButton.visibility = View.GONE
+        saveToHistoryButton.visibility = View.GONE
+        
         saveToGalleryButton.setOnClickListener {
             currentScannedImageUri?.let { uri ->
                 try {
@@ -72,6 +85,15 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "이미지 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+        
+        saveToHistoryButton.setOnClickListener {
+            showTagInputDialog()
+        }
+        
+        historyButton.setOnClickListener {
+            val intent = Intent(this, HistoryActivity::class.java)
+            startActivity(intent)
         }
 
         scannerLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
@@ -131,6 +153,7 @@ class MainActivity : AppCompatActivity() {
         Glide.with(this).clear(firstPageView)
         currentScannedImageUri = null
         saveToGalleryButton.visibility = View.GONE
+        saveToHistoryButton.visibility = View.GONE
 
         val options =
             GmsDocumentScannerOptions.Builder()
@@ -161,6 +184,7 @@ class MainActivity : AppCompatActivity() {
 
         currentScannedImageUri = null
         saveToGalleryButton.visibility = View.GONE
+        saveToHistoryButton.visibility = View.GONE
         Glide.with(this).clear(firstPageView)
 
         if (resultCode == Activity.RESULT_OK && result != null) {
@@ -178,6 +202,7 @@ class MainActivity : AppCompatActivity() {
                 currentScannedImageUri = imageUri
                 Glide.with(this).load(imageUri).into(firstPageView)
                 saveToGalleryButton.visibility = View.VISIBLE
+                saveToHistoryButton.visibility = View.VISIBLE
             }
 
             result.pdf?.uri?.path?.let { path ->
@@ -235,6 +260,31 @@ class MainActivity : AppCompatActivity() {
                 contentResolver.update(uri, contentValues, null, null)
             }
         } ?: throw IOException("Failed to create new MediaStore record for image.")
+    }
+
+    private fun showTagInputDialog() {
+        val dialog = TagInputDialog()
+        dialog.setOnTagsConfirmedListener { tags ->
+            currentScannedImageUri?.let { uri ->
+                saveToHistory(uri.toString(), tags)
+            }
+        }
+        dialog.show(supportFragmentManager, "TagInputDialog")
+    }
+    
+    private fun saveToHistory(imageUri: String, tags: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val scanHistory = ScanHistory(
+                imageUri = imageUri,
+                tags = tags
+            )
+            database.scanHistoryDao().insertScanHistory(scanHistory)
+            
+            runOnUiThread {
+                Toast.makeText(this@MainActivity, "히스토리에 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                saveToHistoryButton.visibility = View.GONE
+            }
+        }
     }
 
     companion object {

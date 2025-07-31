@@ -8,4 +8,5 @@
     <string name="label_enable_gallery_import" translatable="false">Enable gallery import: </string>
     <string name="label_set_page_limit" translatable="false">Set page limit per scan: </string>
     <string name="first_page_view" translatable="false">First page of the scanned document</string>
+    <string name="error_saving_image">이미지를 갤러리에 저장하는 중 오류 발생: %s</string>
 </resources>

@@ -18,6 +18,13 @@ import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanning
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult
 import java.io.File
+import android.content.ContentValues
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
     private lateinit var resultInfo: TextView
@@ -43,7 +50,6 @@ class MainActivity : AppCompatActivity() {
 
         val options =
             GmsDocumentScannerOptions.Builder()
-                .setScannerMode(GmsDocumentScannerOptions.SCANNER_MODE_BASE)
                 .setResultFormats(GmsDocumentScannerOptions.RESULT_FORMAT_JPEG)
                 .setGalleryImportAllowed(enableGalleryImport)
                 .setScannerMode(GmsDocumentScannerOptions.SCANNER_MODE_FULL)
@@ -67,7 +73,18 @@ class MainActivity : AppCompatActivity() {
 
             val pages = result.pages
             if (pages != null && pages.isNotEmpty()) {
-                Glide.with(this).load(pages[0].imageUri).into(firstPageView)
+                val imageUri = pages[0].imageUri
+                Glide.with(this).load(imageUri).into(firstPageView)
+
+                // 갤러리에 이미지 저장
+                try {
+                    saveImageToGallery(imageUri)
+                    // 필요하다면 사용자에게 저장 완료 메시지를 보여줄 수 있습니다.
+                    // Toast.makeText(this, "이미지가 갤러리에 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                } catch (e: IOException) {
+                    // 오류 처리
+                    resultInfo.append("\n${getString(R.string.error_saving_image, e.message)}")
+                }
             }
 
             result.pdf?.uri?.path?.let { path ->
@@ -84,6 +101,41 @@ class MainActivity : AppCompatActivity() {
         } else {
             resultInfo.text = getString(R.string.error_default_message)
         }
+    }
+
+    @Throws(IOException::class)
+    private fun saveImageToGallery(imageUri: Uri) {
+        val contentResolver = contentResolver
+        val displayName = "scanned_image_${System.currentTimeMillis()}.jpg"
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "Pictures/MyScannedImages") // 갤러리 내 특정 폴더에 저장 (선택 사항)
+                put(MediaStore.MediaColumns.IS_PENDING, 1)
+            }
+        }
+
+        val imageOutUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        imageOutUri?.let { uri ->
+            contentResolver.openOutputStream(uri)?.use { outputStream ->
+                // Uri에서 Bitmap으로 변환 (Glide 또는 ImageDecoder 사용 가능)
+                val bitmap: Bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, imageUri))
+                } else {
+                    MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+                }
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                contentValues.clear()
+                contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
+                contentResolver.update(uri, contentValues, null, null)
+            }
+        } ?: throw IOException("Failed to create new MediaStore record.")
     }
 
     companion object {

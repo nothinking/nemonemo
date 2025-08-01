@@ -152,6 +152,7 @@ class MainActivity : AppCompatActivity() {
         saveToGalleryButton.visibility = View.GONE
         saveToHistoryButton.visibility = View.GONE
         cancelButton.visibility = View.GONE
+        resultCard.visibility = View.GONE
         
         // save_to_history_button의 패딩을 원래대로 복원
         val layoutParams = saveToHistoryButton.layoutParams as android.widget.LinearLayout.LayoutParams

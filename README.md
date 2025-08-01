@@ -39,7 +39,7 @@ NEMONEMO는 포토부스에서 나온 인쇄 사진을 스마트폰으로 촬영
 
 ```bash
 git clone [repository-url]
-cd seventh
+cd nemonemo
 ```
 
 ### 2. Android Studio에서 열기
@@ -72,7 +72,7 @@ cd seventh
 ```
 app/
 ├── src/main/
-│   ├── java/com/example/seventh/
+│   ├── java/com/nemonemo/
 │   │   ├── data/                    # 데이터베이스 관련
 │   │   │   ├── AppDatabase.kt       # Room 데이터베이스
 │   │   │   ├── ScanHistory.kt       # 스캔 히스토리 엔티티

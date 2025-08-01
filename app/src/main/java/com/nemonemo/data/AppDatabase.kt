@@ -1,4 +1,4 @@
-package com.example.seventh.data
+package com.nemonemo.data
 
 import android.content.Context
 import androidx.room.Database

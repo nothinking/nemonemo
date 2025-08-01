@@ -1,4 +1,4 @@
-package com.example.seventh.data
+package com.nemonemo.data
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

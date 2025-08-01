@@ -1,4 +1,4 @@
-package com.example.seventh
+package com.nemonemo
 
 import android.app.Dialog
 import android.content.Context

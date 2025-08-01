@@ -1,4 +1,4 @@
-package com.example.seventh
+package com.nemonemo
 
 import org.junit.Test
 

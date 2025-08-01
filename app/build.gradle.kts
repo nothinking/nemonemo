@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.seventh"
+    namespace = "com.nemonemo"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.seventh"
+        applicationId = "com.nemonemo"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

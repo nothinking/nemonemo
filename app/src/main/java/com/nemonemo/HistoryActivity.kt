@@ -1,4 +1,4 @@
-package com.example.seventh
+package com.nemonemo
 
 import android.content.Intent
 import android.net.Uri
@@ -21,8 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.example.seventh.data.AppDatabase
-import com.example.seventh.data.ScanHistory
+import com.nemonemo.data.AppDatabase
+import com.nemonemo.data.ScanHistory
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip

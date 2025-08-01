@@ -35,5 +35,5 @@
 
 ## 참고사항
 
-- GitHub Pages URL: `https://yourusername.github.io/seventh/`
+- GitHub Pages URL: `https://yourusername.github.io/Nemonemo/`
 - 실제 사용 시 `yourusername`을 실제 GitHub 사용자명으로 변경해야 합니다. 

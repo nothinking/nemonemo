@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://yourusername.github.io/seventh/sitemap.xml 
+Sitemap: https://yourusername.github.io/nemonemo/sitemap.xml

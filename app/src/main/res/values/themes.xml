@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Seventh" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Nemonemo" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
@@ -36,10 +36,10 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
-    <style name="Theme.Seventh" parent="Base.Theme.Seventh" />
+    <style name="Theme.Nemonemo" parent="Base.Theme.Nemonemo" />
     
     <!-- 전체화면 이미지 뷰어용 테마 -->
-    <style name="Theme.Seventh.Fullscreen" parent="Base.Theme.Seventh">
+    <style name="Theme.Nemonemo.Fullscreen" parent="Base.Theme.Nemonemo">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>

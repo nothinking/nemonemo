@@ -1,4 +1,4 @@
-package com.example.seventh
+package com.nemonemo
 
 import android.app.Activity
 import android.content.Intent
@@ -32,8 +32,8 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import java.io.IOException
-import com.example.seventh.data.AppDatabase
-import com.example.seventh.data.ScanHistory
+import com.nemonemo.data.AppDatabase
+import com.nemonemo.data.ScanHistory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -183,7 +183,7 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "Test scan clicked - simulating scan result")
         
         // 테스트용 이미지 URI 생성 (실제로는 존재하지 않는 URI)
-        val testImageUri = Uri.parse("content://com.example.seventh.test/scanned_image.jpg")
+        val testImageUri = Uri.parse("content://com.nemonemo.test/scanned_image.jpg")
         currentScannedImageUri = testImageUri
         isFromGallery = false
         

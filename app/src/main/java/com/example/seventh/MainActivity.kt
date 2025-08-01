@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -29,9 +28,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import java.io.IOException
-import android.view.GestureDetector
-import android.view.MotionEvent
-import androidx.core.view.GestureDetectorCompat
 import com.example.seventh.data.AppDatabase
 import com.example.seventh.data.ScanHistory
 import kotlinx.coroutines.CoroutineScope
@@ -40,7 +36,6 @@ import kotlinx.coroutines.launch
 import android.util.Log
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var resultInfo: TextView
     private lateinit var firstPageView: ImageView
     private lateinit var resultCard: MaterialCardView
     private lateinit var scannerLauncher: ActivityResultLauncher<IntentSenderRequest>
@@ -52,12 +47,6 @@ class MainActivity : AppCompatActivity() {
     private var currentScannedImageUri: Uri? = null
     private lateinit var database: AppDatabase
 
-    // 트리플 탭 감지를 위한 변수
-    private lateinit var gestureDetector: GestureDetectorCompat
-    private var tripleTapCounter = 0
-    private val TRIPLE_TAP_TIMEOUT = 500L
-    private var lastTapTime: Long = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -66,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar)
         setSupportActionBar(toolbar)
 
-        resultInfo = findViewById(R.id.result_info)
         firstPageView = findViewById(R.id.first_page_view)
         resultCard = findViewById(R.id.result_card)
         saveToGalleryButton = findViewById(R.id.save_to_gallery_button)
@@ -84,7 +72,6 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "이미지가 갤러리에 저장되었습니다.", Toast.LENGTH_SHORT).show()
                     saveToGalleryButton.visibility = View.GONE
                 } catch (e: IOException) {
-                    resultInfo.append("\n${getString(R.string.error_saving_image, e.message)}")
                     Toast.makeText(this, "이미지 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -102,47 +89,10 @@ class MainActivity : AppCompatActivity() {
         scannerLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             handleActivityResult(result)
         }
-
-        // GestureDetector 초기화
-        gestureDetector = GestureDetectorCompat(this, object : GestureDetector.SimpleOnGestureListener() {
-            override fun onDown(e: MotionEvent): Boolean {
-                return true
-            }
-
-            override fun onSingleTapUp(e: MotionEvent): Boolean {
-                val currentTime = System.currentTimeMillis()
-                if (currentTime - lastTapTime < TRIPLE_TAP_TIMEOUT) {
-                    tripleTapCounter++
-                } else {
-                    tripleTapCounter = 1
-                }
-                lastTapTime = currentTime
-
-                if (tripleTapCounter == 3) {
-                    resultCard.visibility = if (resultCard.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-                    tripleTapCounter = 0
-                    if (resultCard.visibility == View.VISIBLE) {
-                        Toast.makeText(this@MainActivity, "스캔 결과 표시", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this@MainActivity, "스캔 결과 숨김", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                return true
-            }
-        })
-
-        val rootView = findViewById<View>(android.R.id.content)
-        rootView.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
-            true
-        }
     }
 
     @Suppress("UNUSED_PARAMETER")
     fun onScanButtonClicked(unused: View) {
-        if (resultCard.visibility == View.VISIBLE) {
-            resultInfo.text = null
-        }
         Glide.with(this).clear(firstPageView)
         currentScannedImageUri = null
         saveToGalleryButton.visibility = View.GONE
@@ -162,11 +112,7 @@ class MainActivity : AppCompatActivity() {
             }
             .addOnFailureListener() { e: Exception ->
                 val errorMessage = getString(R.string.error_default_message, e.message)
-                if (resultCard.visibility == View.VISIBLE) {
-                    resultInfo.text = errorMessage
-                } else {
-                    Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
-                }
+                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
             }
     }
 
@@ -183,9 +129,6 @@ class MainActivity : AppCompatActivity() {
         Glide.with(this)
             .load(R.drawable.ic_launcher_foreground)
             .into(firstPageView)
-        
-        // 결과 정보 설정
-        resultInfo.text = "테스트 스캔 완료 - 스캔된 페이지: 1개"
         
         // 버튼들 표시
         saveToGalleryButton.visibility = View.VISIBLE
@@ -210,8 +153,6 @@ class MainActivity : AppCompatActivity() {
 
         if (resultCode == Activity.RESULT_OK && result != null) {
             Log.d(TAG, "Scan successful, processing result")
-            val scanResultText = getString(R.string.scan_result, result)
-            resultInfo.text = scanResultText
 
             val pages = result.pages
             Log.d(TAG, "Pages: $pages, size: ${pages?.size}")

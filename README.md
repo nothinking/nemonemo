@@ -82,7 +82,7 @@ cd nemonemo
 ```
 app/
 ├── src/main/
-│   ├── java/com/nemonemo/
+│   ├── java/com/seango/nemonemo/
 │   │   ├── data/                    # 데이터베이스 관련
 │   │   │   ├── AppDatabase.kt       # Room 데이터베이스
 │   │   │   ├── ScanHistory.kt       # 스캔 히스토리 엔티티

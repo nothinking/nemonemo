@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import android.view.WindowManager
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import android.widget.ImageButton
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
@@ -63,6 +65,11 @@ class HistoryActivity : AppCompatActivity() {
             
             adapter = HistoryPagerAdapter()
             viewPager.adapter = adapter
+            
+            // 삭제 리스너 설정
+            adapter.setOnDeleteClickListener { scanHistory, position ->
+                deleteHistoryItem(scanHistory, position)
+            }
             
             // 태그 필터 설정
             setupTagFilter()
@@ -229,13 +236,37 @@ class HistoryActivity : AppCompatActivity() {
             }
         }
     }
+    
+    private fun deleteHistoryItem(scanHistory: ScanHistory, position: Int) {
+        lifecycleScope.launch {
+            try {
+                Log.d(TAG, "Deleting history item: ${scanHistory.id}")
+                
+                // 데이터베이스에서 삭제
+                database.scanHistoryDao().deleteScanHistory(scanHistory)
+                
+                // 성공 메시지 표시
+                Toast.makeText(this@HistoryActivity, "추억이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                
+                Log.d(TAG, "Successfully deleted history item: ${scanHistory.id}")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error deleting history item: ${e.message}", e)
+                Toast.makeText(this@HistoryActivity, "삭제 중 오류가 발생했습니다: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 }
 
 class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryViewHolder>() {
     private var historyList: List<ScanHistory> = emptyList()
+    private var onDeleteClickListener: ((ScanHistory, Int) -> Unit)? = null
     
     companion object {
         private const val TAG = "HistoryPagerAdapter"
+    }
+    
+    fun setOnDeleteClickListener(listener: (ScanHistory, Int) -> Unit) {
+        onDeleteClickListener = listener
     }
     
     fun submitList(newList: List<ScanHistory>) {
@@ -263,7 +294,7 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
     
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         try {
-            holder.bind(historyList[position])
+            holder.bind(historyList[position], position)
         } catch (e: Exception) {
             Log.e(TAG, "Error binding ViewHolder at position $position: ${e.message}", e)
         }
@@ -275,8 +306,9 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
         private val imageView: ImageView = itemView.findViewById(R.id.history_image)
         private val tagChipGroup: ChipGroup = itemView.findViewById(R.id.tag_chip_group)
         private val dateTextView: TextView = itemView.findViewById(R.id.history_date)
+        private val deleteButton: ImageButton = itemView.findViewById(R.id.delete_button)
         
-        fun bind(scanHistory: ScanHistory) {
+        fun bind(scanHistory: ScanHistory, position: Int) {
             try {
                 // 이미지 로드
                 Glide.with(itemView.context)
@@ -285,7 +317,12 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
                 
                 // 이미지 클릭 이벤트 추가
                 imageView.setOnClickListener {
-                    openFullscreenImage(scanHistory, adapterPosition)
+                    openFullscreenImage(scanHistory, position)
+                }
+                
+                // 삭제 버튼 클릭 이벤트 추가
+                deleteButton.setOnClickListener {
+                    showDeleteConfirmationDialog(scanHistory, position)
                 }
                 
                 // 태그 표시
@@ -310,6 +347,21 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
             } catch (e: Exception) {
                 Log.e(TAG, "Error binding history item: ${e.message}", e)
             }
+        }
+        
+        private fun showDeleteConfirmationDialog(scanHistory: ScanHistory, position: Int) {
+            AlertDialog.Builder(itemView.context)
+                .setTitle("삭제 확인")
+                .setMessage("이 추억을 삭제하시겠습니까?")
+                .setPositiveButton("삭제") { _, _ ->
+                    // 어댑터를 통해 삭제 리스너 호출
+                    val adapter = itemView.parent?.let { parent ->
+                        (parent as? RecyclerView)?.adapter as? HistoryPagerAdapter
+                    }
+                    adapter?.onDeleteClickListener?.invoke(scanHistory, position)
+                }
+                .setNegativeButton("취소", null)
+                .show()
         }
         
         private fun openFullscreenImage(scanHistory: ScanHistory, position: Int) {

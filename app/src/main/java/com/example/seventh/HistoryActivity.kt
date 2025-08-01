@@ -49,10 +49,9 @@ class HistoryActivity : AppCompatActivity() {
             val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar)
             setSupportActionBar(toolbar)
             
-            // 뒤로가기 버튼 설정
-            toolbar.setNavigationOnClickListener {
-                finish()
-            }
+            // 뒤로가기 버튼 제거
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            supportActionBar?.setDisplayShowHomeEnabled(false)
             
             viewPager = findViewById(R.id.view_pager)
             emptyCard = findViewById(R.id.empty_card)

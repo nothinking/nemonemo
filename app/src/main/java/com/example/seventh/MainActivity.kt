@@ -54,6 +54,9 @@ class MainActivity : AppCompatActivity() {
         // Material Toolbar 설정
         val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar)
         setSupportActionBar(toolbar)
+        
+        // 홈화면이므로 뒤로가기 버튼은 표시하지 않음
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         firstPageView = findViewById(R.id.first_page_view)
         resultCard = findViewById(R.id.result_card)

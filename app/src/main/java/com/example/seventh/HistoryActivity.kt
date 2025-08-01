@@ -304,7 +304,7 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
     
     class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageView: ImageView = itemView.findViewById(R.id.history_image)
-        private val tagChipGroup: ChipGroup = itemView.findViewById(R.id.tag_chip_group)
+        private val tagTextView: TextView = itemView.findViewById(R.id.tag_text)
         private val dateTextView: TextView = itemView.findViewById(R.id.history_date)
         private val deleteButton: ImageButton = itemView.findViewById(R.id.delete_button)
         
@@ -326,16 +326,12 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
                 }
                 
                 // 태그 표시
-                tagChipGroup.removeAllViews()
-                val tags = scanHistory.tags.split(",").map { it.trim() }
-                tags.forEach { tag ->
-                    if (tag.isNotEmpty()) {
-                        val chip = Chip(itemView.context).apply {
-                            text = tag
-                            isCheckable = false
-                        }
-                        tagChipGroup.addView(chip)
-                    }
+                val tags = scanHistory.tags.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+                if (tags.isNotEmpty()) {
+                    tagTextView.text = "태그: ${tags.joinToString(", ")}"
+                    tagTextView.visibility = View.VISIBLE
+                } else {
+                    tagTextView.visibility = View.GONE
                 }
                 
                 // 날짜 표시

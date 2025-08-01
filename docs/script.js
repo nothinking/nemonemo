@@ -80,24 +80,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Typing animation for hero title
+    // Typing animation for hero title (preserves HTML tags)
     const heroTitle = document.querySelector('.hero-title');
     if (heroTitle) {
-        const text = heroTitle.innerHTML;
-        heroTitle.innerHTML = '';
-        heroTitle.style.opacity = '1';
+        // Store the original HTML structure
+        const originalHTML = heroTitle.innerHTML;
         
-        let i = 0;
-        const typeWriter = () => {
-            if (i < text.length) {
-                heroTitle.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 50);
-            }
-        };
+        // Create a temporary container to work with text nodes
+        const tempContainer = document.createElement('div');
+        tempContainer.innerHTML = originalHTML;
         
-        // Start typing animation after a short delay
-        setTimeout(typeWriter, 500);
+        // Extract text content while preserving HTML structure
+        const textContent = tempContainer.textContent || tempContainer.innerText || '';
+        
+        // Clear the title and add a fade-in effect instead
+        heroTitle.style.opacity = '0';
+        heroTitle.style.transform = 'translateY(20px)';
+        heroTitle.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        
+        // Restore original HTML and animate in
+        setTimeout(() => {
+            heroTitle.innerHTML = originalHTML;
+            heroTitle.style.opacity = '1';
+            heroTitle.style.transform = 'translateY(0)';
+        }, 500);
     }
 
     // Counter animation for statistics (if any)

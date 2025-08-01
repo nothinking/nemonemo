@@ -122,29 +122,46 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:layout_marginTop="16dp">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/save_to_gallery_button"
-                            android:layout_width="0dp"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/save_to_gallery"
-                            android:visibility="gone"
-                            android:layout_marginEnd="8dp"
-                            app:icon="@android:drawable/ic_menu_save"
-                            style="@style/Widget.Material3.Button.OutlinedButton" />
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/save_to_gallery_button"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/save_to_gallery"
+                                android:visibility="gone"
+                                android:layout_marginEnd="8dp"
+                                app:icon="@android:drawable/ic_menu_save"
+                                style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/save_to_history_button"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/save_to_history"
+                                android:visibility="gone"
+                                android:layout_marginStart="8dp"
+                                app:icon="@android:drawable/ic_menu_edit"
+                                style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                        </LinearLayout>
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/save_to_history_button"
-                            android:layout_width="0dp"
+                            android:id="@+id/cancel_button"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/save_to_history"
+                            android:text="취소"
                             android:visibility="gone"
-                            android:layout_marginStart="8dp"
-                            app:icon="@android:drawable/ic_menu_edit"
+                            android:layout_marginTop="8dp"
+                            app:icon="@android:drawable/ic_menu_close_clear_cancel"
                             style="@style/Widget.Material3.Button.OutlinedButton" />
 
                     </LinearLayout>

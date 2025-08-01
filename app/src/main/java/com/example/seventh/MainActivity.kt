@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var saveToGalleryButton: Button
     private lateinit var saveToHistoryButton: Button
+    private lateinit var cancelButton: Button
     private lateinit var historyButton: Button
     private var currentScannedImageUri: Uri? = null
     private var isFromGallery: Boolean = false
@@ -71,6 +72,7 @@ class MainActivity : AppCompatActivity() {
         resultCard = findViewById(R.id.result_card)
         saveToGalleryButton = findViewById(R.id.save_to_gallery_button)
         saveToHistoryButton = findViewById(R.id.save_to_history_button)
+        cancelButton = findViewById(R.id.cancel_button)
         historyButton = findViewById(R.id.history_button)
         database = AppDatabase.getDatabase(this)
 
@@ -91,6 +93,10 @@ class MainActivity : AppCompatActivity() {
         
         saveToHistoryButton.setOnClickListener {
             showTagInputDialog()
+        }
+        
+        cancelButton.setOnClickListener {
+            resetImageArea()
         }
         
         historyButton.setOnClickListener {
@@ -145,6 +151,7 @@ class MainActivity : AppCompatActivity() {
         isFromGallery = false
         saveToGalleryButton.visibility = View.GONE
         saveToHistoryButton.visibility = View.GONE
+        cancelButton.visibility = View.GONE
 
         val options =
             GmsDocumentScannerOptions.Builder()
@@ -188,6 +195,7 @@ class MainActivity : AppCompatActivity() {
         // 버튼들 표시
         saveToGalleryButton.visibility = View.VISIBLE
         saveToHistoryButton.visibility = View.VISIBLE
+        cancelButton.visibility = View.VISIBLE
         resultCard.visibility = View.VISIBLE
         
         Log.d(TAG, "Test scan result displayed successfully")
@@ -204,6 +212,7 @@ class MainActivity : AppCompatActivity() {
         isFromGallery = false
         saveToGalleryButton.visibility = View.GONE
         saveToHistoryButton.visibility = View.GONE
+        cancelButton.visibility = View.GONE
         resultCard.visibility = View.GONE
         Glide.with(this).clear(firstPageView)
 
@@ -220,6 +229,7 @@ class MainActivity : AppCompatActivity() {
                 Glide.with(this).load(imageUri).into(firstPageView)
                 saveToGalleryButton.visibility = View.VISIBLE
                 saveToHistoryButton.visibility = View.VISIBLE
+                cancelButton.visibility = View.VISIBLE
                 resultCard.visibility = View.VISIBLE
                 Log.d(TAG, "Result card and buttons made visible")
             } else {
@@ -246,10 +256,11 @@ class MainActivity : AppCompatActivity() {
             currentScannedImageUri = it
             isFromGallery = true
             Glide.with(this).load(it).into(firstPageView)
-            // 갤러리에서 불러온 이미지는 갤러리에 저장 버튼 숨김
-            saveToGalleryButton.visibility = View.GONE
-            saveToHistoryButton.visibility = View.VISIBLE
-            resultCard.visibility = View.VISIBLE
+                    // 갤러리에서 불러온 이미지는 갤러리에 저장 버튼 숨김
+        saveToGalleryButton.visibility = View.GONE
+        saveToHistoryButton.visibility = View.VISIBLE
+        cancelButton.visibility = View.VISIBLE
+        resultCard.visibility = View.VISIBLE
             Toast.makeText(this, "갤러리에서 이미지를 불러왔습니다.", Toast.LENGTH_SHORT).show()
         } ?: run {
             Toast.makeText(this, "갤러리에서 이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
@@ -314,9 +325,33 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 val message = if (isFromGallery) "갤러리 이미지가 추억에 저장되었습니다." else "포토부스 추억에 저장되었습니다."
                 Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-                saveToHistoryButton.visibility = View.GONE
+                
+                // 이미지 영역 리셋
+                resetImageArea()
+                
+                // 추억보기 페이지로 이동
+                val intent = Intent(this@MainActivity, HistoryActivity::class.java)
+                startActivity(intent)
             }
         }
+    }
+    
+    private fun resetImageArea() {
+        // 이미지 뷰 초기화
+        Glide.with(this).clear(firstPageView)
+        firstPageView.setImageDrawable(null)
+        
+        // 현재 스캔된 이미지 URI 초기화
+        currentScannedImageUri = null
+        isFromGallery = false
+        
+        // 버튼들 숨기기
+        saveToGalleryButton.visibility = View.GONE
+        saveToHistoryButton.visibility = View.GONE
+        cancelButton.visibility = View.GONE
+        
+        // 결과 카드 숨기기
+        resultCard.visibility = View.GONE
     }
 
     companion object {

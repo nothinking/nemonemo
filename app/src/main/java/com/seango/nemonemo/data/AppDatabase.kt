@@ -1,4 +1,4 @@
-package com.nemonemo.data
+package com.seango.nemonemo.data
 
 import android.content.Context
 import androidx.room.Database

@@ -1,4 +1,4 @@
-package com.nemonemo
+package com.seango.nemonemo
 
 import android.app.Dialog
 import android.content.Context

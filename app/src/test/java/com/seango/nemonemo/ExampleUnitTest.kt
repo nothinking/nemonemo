@@ -1,4 +1,4 @@
-package com.nemonemo
+package com.seango.nemonemo
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.nemonemo
+package com.seango.nemonemo
 
 import android.app.Activity
 import android.content.Intent
@@ -32,8 +32,8 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import java.io.IOException
-import com.nemonemo.data.AppDatabase
-import com.nemonemo.data.ScanHistory
+import com.seango.nemonemo.data.AppDatabase
+import com.seango.nemonemo.data.ScanHistory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "Test scan clicked - simulating scan result")
         
         // 테스트용 이미지 URI 생성 (실제로는 존재하지 않는 URI)
-        val testImageUri = Uri.parse("content://com.nemonemo.test/scanned_image.jpg")
+        val testImageUri = Uri.parse("content://com.seango.nemonemo.test/scanned_image.jpg")
         currentScannedImageUri = testImageUri
         isFromGallery = false
         
@@ -266,23 +266,55 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleGalleryResult(uri: Uri?) {
         uri?.let {
-            currentScannedImageUri = it
-            isFromGallery = true
-            Glide.with(this).load(it).into(firstPageView)
-            // 갤러리에서 불러온 이미지는 갤러리에 저장 버튼 숨김
-            saveToGalleryButton.visibility = View.GONE
-            saveToHistoryButton.visibility = View.VISIBLE
-            cancelButton.visibility = View.VISIBLE
-            resultCard.visibility = View.VISIBLE
-            
-            // 갤러리에서 가져온 경우 save_to_history_button의 왼쪽 패딩 제거
-            val layoutParams = saveToHistoryButton.layoutParams as android.widget.LinearLayout.LayoutParams
-            layoutParams.marginStart = 0
-            saveToHistoryButton.layoutParams = layoutParams
-            
-            Toast.makeText(this, "갤러리에서 이미지를 불러왔습니다.", Toast.LENGTH_SHORT).show()
+            // 갤러리 이미지를 앱 내부 저장소에 복사
+            copyGalleryImageToInternalStorage(it) { copiedUri ->
+                currentScannedImageUri = copiedUri
+                isFromGallery = true
+                Glide.with(this).load(copiedUri).into(firstPageView)
+                // 갤러리에서 불러온 이미지는 갤러리에 저장 버튼 숨김
+                saveToGalleryButton.visibility = View.GONE
+                saveToHistoryButton.visibility = View.VISIBLE
+                cancelButton.visibility = View.VISIBLE
+                resultCard.visibility = View.VISIBLE
+                
+                // 갤러리에서 가져온 경우 save_to_history_button의 왼쪽 패딩 제거
+                val layoutParams = saveToHistoryButton.layoutParams as android.widget.LinearLayout.LayoutParams
+                layoutParams.marginStart = 0
+                saveToHistoryButton.layoutParams = layoutParams
+                
+                Toast.makeText(this, "갤러리에서 이미지를 불러왔습니다.", Toast.LENGTH_SHORT).show()
+            }
         } ?: run {
             Toast.makeText(this, "갤러리에서 이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    private fun copyGalleryImageToInternalStorage(uri: Uri, onComplete: (Uri) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val inputStream = contentResolver.openInputStream(uri)
+                val fileName = "gallery_image_${System.currentTimeMillis()}.jpg"
+                val file = File(filesDir, fileName)
+                
+                inputStream?.use { input ->
+                    file.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                
+                val fileUri = Uri.fromFile(file)
+                
+                runOnUiThread {
+                    onComplete(fileUri)
+                }
+                
+                Log.d(TAG, "Successfully copied gallery image to internal storage: ${file.absolutePath}")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error copying gallery image: ${e.message}", e)
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity, "이미지 처리 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

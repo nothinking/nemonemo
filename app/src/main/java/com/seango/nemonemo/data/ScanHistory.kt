@@ -1,4 +1,4 @@
-package com.nemonemo.data
+package com.seango.nemonemo.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

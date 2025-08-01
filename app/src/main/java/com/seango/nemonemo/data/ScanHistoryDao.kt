@@ -1,4 +1,4 @@
-package com.nemonemo.data
+package com.seango.nemonemo.data
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

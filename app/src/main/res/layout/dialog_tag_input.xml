@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="20dp"
-    app:cardCornerRadius="24dp"
+    app:cardCornerRadius="0dp"
     app:cardElevation="0dp"
     app:strokeWidth="3dp"
     app:strokeColor="@color/pink_light">
@@ -40,10 +40,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="28dp"
             android:hint="@string/tag_input_hint"
-            app:boxCornerRadiusTopStart="16dp"
-            app:boxCornerRadiusTopEnd="16dp"
-            app:boxCornerRadiusBottomStart="16dp"
-            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusTopStart="0dp"
+            app:boxCornerRadiusTopEnd="0dp"
+            app:boxCornerRadiusBottomStart="0dp"
+            app:boxCornerRadiusBottomEnd="0dp"
             app:boxStrokeColor="@color/purple_primary"
             app:hintTextColor="@color/purple_primary"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
@@ -71,7 +71,7 @@
                 android:text="취소 😅"
                 android:textSize="16sp"
                 android:layout_marginEnd="12dp"
-                app:cornerRadius="16dp"
+                app:cornerRadius="0dp"
                 app:backgroundTint="@color/yellow_primary"
                 android:textColor="@color/white" />
 
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:text="확인 💕"
                 android:textSize="16sp"
-                app:cornerRadius="16dp"
+                app:cornerRadius="0dp"
                 app:backgroundTint="@color/pink_primary"
                 android:textColor="@color/white" />
 

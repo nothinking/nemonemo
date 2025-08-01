@@ -1,6 +1,7 @@
 package com.example.seventh
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import android.widget.Toast
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -26,6 +28,7 @@ import android.widget.ImageButton
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -69,6 +72,11 @@ class HistoryActivity : AppCompatActivity() {
             // 삭제 리스너 설정
             adapter.setOnDeleteClickListener { scanHistory, position ->
                 deleteHistoryItem(scanHistory, position)
+            }
+            
+            // 공유 리스너 설정
+            adapter.setOnShareClickListener { scanHistory ->
+                shareImage(scanHistory)
             }
             
             // 태그 필터 설정
@@ -255,11 +263,50 @@ class HistoryActivity : AppCompatActivity() {
             }
         }
     }
+    
+    private fun shareImage(scanHistory: ScanHistory) {
+        try {
+            Log.d(TAG, "Sharing image: ${scanHistory.imageUri}")
+            
+            val imageUri = Uri.parse(scanHistory.imageUri)
+            val file = File(imageUri.path ?: "")
+            
+            if (!file.exists()) {
+                Toast.makeText(this, "이미지 파일을 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            // FileProvider를 사용하여 URI 생성
+            val contentUri = FileProvider.getUriForFile(
+                this,
+                "${packageName}.fileprovider",
+                file
+            )
+            
+            // 공유 인텐트 생성
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "image/*"
+                putExtra(Intent.EXTRA_STREAM, contentUri)
+                putExtra(Intent.EXTRA_TEXT, "포토부스 추억을 공유합니다!")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            
+            // 공유 선택 다이얼로그 표시
+            val chooser = Intent.createChooser(shareIntent, "공유하기")
+            startActivity(chooser)
+            
+            Log.d(TAG, "Successfully shared image: ${scanHistory.imageUri}")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sharing image: ${e.message}", e)
+            Toast.makeText(this, "공유 중 오류가 발생했습니다: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
 }
 
 class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryViewHolder>() {
     private var historyList: List<ScanHistory> = emptyList()
     private var onDeleteClickListener: ((ScanHistory, Int) -> Unit)? = null
+    private var onShareClickListener: ((ScanHistory) -> Unit)? = null
     
     companion object {
         private const val TAG = "HistoryPagerAdapter"
@@ -267,6 +314,10 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
     
     fun setOnDeleteClickListener(listener: (ScanHistory, Int) -> Unit) {
         onDeleteClickListener = listener
+    }
+    
+    fun setOnShareClickListener(listener: (ScanHistory) -> Unit) {
+        onShareClickListener = listener
     }
     
     fun submitList(newList: List<ScanHistory>) {
@@ -307,6 +358,7 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
         private val tagTextView: TextView = itemView.findViewById(R.id.tag_text)
         private val dateTextView: TextView = itemView.findViewById(R.id.history_date)
         private val deleteButton: ImageButton = itemView.findViewById(R.id.delete_button)
+        private val shareButton: ImageButton = itemView.findViewById(R.id.share_button)
         
         fun bind(scanHistory: ScanHistory, position: Int) {
             try {
@@ -323,6 +375,14 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
                 // 삭제 버튼 클릭 이벤트 추가
                 deleteButton.setOnClickListener {
                     showDeleteConfirmationDialog(scanHistory, position)
+                }
+                
+                // 공유 버튼 클릭 이벤트 추가
+                shareButton.setOnClickListener {
+                    val adapter = itemView.parent?.let { parent ->
+                        (parent as? RecyclerView)?.adapter as? HistoryPagerAdapter
+                    }
+                    adapter?.onShareClickListener?.invoke(scanHistory)
                 }
                 
                 // 태그 표시

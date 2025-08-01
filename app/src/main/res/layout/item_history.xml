@@ -28,12 +28,27 @@
                 android:padding="8dp" />
 
             <ImageButton
-                android:id="@+id/delete_button"
+                android:id="@+id/share_button"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_margin="8dp"
+                android:src="@drawable/ic_share"
+                android:background="@android:color/transparent"
+                android:tint="?attr/colorOnSurfaceVariant"
+                android:contentDescription="공유"
+                android:scaleType="fitCenter"
+                android:padding="2dp" />
+
+            <ImageButton
+                android:id="@+id/delete_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_toStartOf="@id/share_button"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:src="@android:drawable/ic_menu_delete"
                 android:background="@android:color/transparent"
                 android:tint="?attr/colorOnSurfaceVariant"

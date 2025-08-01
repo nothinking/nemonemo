@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">NEMONEMO</string>
     <string name="scan_button" translatable="false">포토부스 사진 촬영</string>
+    <string name="gallery_button" translatable="false">갤러리에서 이미지 불러오기</string>
     <string name="error_scanner_cancelled" translatable="false">촬영이 취소되었습니다.</string>
     <string name="error_default_message" translatable="false">촬영에 실패했습니다: %1$s</string>
     <string name="label_mode_selector" translatable="false">Scanner feature mode: </string>

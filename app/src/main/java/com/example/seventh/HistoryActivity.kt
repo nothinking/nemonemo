@@ -240,12 +240,12 @@ class HistoryActivity : AppCompatActivity() {
                         viewPager.visibility = View.GONE
                         emptyCard.visibility = View.VISIBLE
                         
-                                            // 필터링된 결과가 없을 때 메시지 변경
-                    val message = if (filterTag != null && filterTag.isNotEmpty()) {
-                        "'$filterTag'와 함께 찍은 포토부스 사진이 없습니다."
-                    } else {
-                        "포토부스 추억이 없습니다."
-                    }
+                        // 필터링된 결과가 없을 때 메시지 변경
+                        val message = if (filterTag != null && filterTag.isNotEmpty()) {
+                            "'$filterTag'와 함께 찍은 포토부스 사진이 없습니다."
+                        } else {
+                            "포토부스 추억이 없습니다."
+                        }
                         emptyText.text = message
                         
                         Log.d(TAG, "Showing empty state with message: $message")
@@ -423,10 +423,11 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
                     tagTextView.visibility = View.GONE
                 }
                 
-                // 날짜 표시
+                // 날짜 표시 (갤러리에서 불러온 이미지인지 구분)
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
                 val date = Date(scanHistory.timestamp)
-                dateTextView.text = "촬영 날짜: ${dateFormat.format(date)}"
+                val sourceText = if (scanHistory.isFromGallery) "갤러리에서 불러옴" else "포토부스 촬영"
+                dateTextView.text = "$sourceText - ${dateFormat.format(date)}"
                 
                 Log.d(TAG, "Successfully bound history item: ${scanHistory.id}")
             } catch (e: Exception) {

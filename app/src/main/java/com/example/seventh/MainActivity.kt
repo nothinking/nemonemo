@@ -43,12 +43,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var firstPageView: ImageView
     private lateinit var resultCard: MaterialCardView
     private lateinit var scannerLauncher: ActivityResultLauncher<IntentSenderRequest>
+    private lateinit var galleryLauncher: ActivityResultLauncher<String>
     private var enableGalleryImport = true
 
     private lateinit var saveToGalleryButton: Button
     private lateinit var saveToHistoryButton: Button
     private lateinit var historyButton: Button
     private var currentScannedImageUri: Uri? = null
+    private var isFromGallery: Boolean = false
     private lateinit var database: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +101,11 @@ class MainActivity : AppCompatActivity() {
         scannerLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             handleActivityResult(result)
         }
+
+        // 갤러리 이미지 선택을 위한 ActivityResultLauncher
+        galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            handleGalleryResult(uri)
+        }
     }
 
     private fun setupSystemUI() {
@@ -135,6 +142,7 @@ class MainActivity : AppCompatActivity() {
     fun onScanButtonClicked(unused: View) {
         Glide.with(this).clear(firstPageView)
         currentScannedImageUri = null
+        isFromGallery = false
         saveToGalleryButton.visibility = View.GONE
         saveToHistoryButton.visibility = View.GONE
 
@@ -156,6 +164,12 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    @Suppress("UNUSED_PARAMETER")
+    fun onGalleryButtonClicked(unused: View) {
+        // 갤러리에서 이미지 선택
+        galleryLauncher.launch("image/*")
+    }
+
     // 테스트용 메서드 - 스캔 결과 시뮬레이션
     @Suppress("UNUSED_PARAMETER")
     fun onTestScanClicked(unused: View) {
@@ -164,6 +178,7 @@ class MainActivity : AppCompatActivity() {
         // 테스트용 이미지 URI 생성 (실제로는 존재하지 않는 URI)
         val testImageUri = Uri.parse("content://com.example.seventh.test/scanned_image.jpg")
         currentScannedImageUri = testImageUri
+        isFromGallery = false
         
         // 테스트용 이미지 로드 (기본 이미지 사용)
         Glide.with(this)
@@ -186,6 +201,7 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "handleActivityResult: resultCode=$resultCode, result=$result")
 
         currentScannedImageUri = null
+        isFromGallery = false
         saveToGalleryButton.visibility = View.GONE
         saveToHistoryButton.visibility = View.GONE
         resultCard.visibility = View.GONE
@@ -222,6 +238,21 @@ class MainActivity : AppCompatActivity() {
             Log.w(TAG, "Scan failed with resultCode: $resultCode")
             val defaultErrorMessage = getString(R.string.error_default_message)
             Toast.makeText(this, defaultErrorMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun handleGalleryResult(uri: Uri?) {
+        uri?.let {
+            currentScannedImageUri = it
+            isFromGallery = true
+            Glide.with(this).load(it).into(firstPageView)
+            // 갤러리에서 불러온 이미지는 갤러리에 저장 버튼 숨김
+            saveToGalleryButton.visibility = View.GONE
+            saveToHistoryButton.visibility = View.VISIBLE
+            resultCard.visibility = View.VISIBLE
+            Toast.makeText(this, "갤러리에서 이미지를 불러왔습니다.", Toast.LENGTH_SHORT).show()
+        } ?: run {
+            Toast.makeText(this, "갤러리에서 이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -275,12 +306,14 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             val scanHistory = ScanHistory(
                 imageUri = imageUri,
-                tags = tags
+                tags = tags,
+                isFromGallery = isFromGallery
             )
             database.scanHistoryDao().insertScanHistory(scanHistory)
             
             runOnUiThread {
-                Toast.makeText(this@MainActivity, "포토부스 추억에 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                val message = if (isFromGallery) "갤러리 이미지가 추억에 저장되었습니다." else "포토부스 추억에 저장되었습니다."
+                Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
                 saveToHistoryButton.visibility = View.GONE
             }
         }

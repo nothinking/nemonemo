@@ -9,5 +9,6 @@ data class ScanHistory(
     val id: Long = 0,
     val imageUri: String,
     val tags: String,
+    val isFromGallery: Boolean = false,
     val timestamp: Long = System.currentTimeMillis()
 ) 

@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="8dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="2dp"
                 app:strokeColor="@color/pink_light">
 
@@ -91,7 +91,7 @@
                 app:cornerRadius="16dp"
                 app:backgroundTint="@color/pink_primary"
                 android:textColor="@color/white"
-                app:elevation="6dp" />
+                app:elevation="0dp" />
 
             <!-- 갤러리에서 가져오기 버튼 -->
             <com.google.android.material.button.MaterialButton
@@ -106,7 +106,7 @@
                 app:cornerRadius="16dp"
                 app:backgroundTint="@color/purple_primary"
                 android:textColor="@color/white"
-                app:elevation="6dp" />
+                app:elevation="0dp" />
 
             <!-- 결과 카드 -->
             <com.google.android.material.card.MaterialCardView
@@ -116,7 +116,7 @@
                 android:layout_marginTop="16dp"
                 android:visibility="gone"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="8dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="2dp"
                 app:strokeColor="@color/blue_light">
 
@@ -200,7 +200,7 @@
                 app:cornerRadius="16dp"
                 app:backgroundTint="@color/blue_primary"
                 android:textColor="@color/white"
-                app:elevation="6dp" />
+                app:elevation="0dp" />
 
         </LinearLayout>
 
@@ -218,6 +218,6 @@
         app:srcCompat="@drawable/ic_camera_emoji"
         app:tint="@color/white"
         app:backgroundTint="@color/pink_primary"
-        app:elevation="8dp" />
+        app:elevation="0dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

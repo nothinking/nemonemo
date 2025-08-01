@@ -27,6 +27,11 @@
         <activity
             android:name=".HistoryActivity"
             android:exported="false" />
+            
+        <activity
+            android:name=".FullscreenImageActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Seventh.Fullscreen" />
     </application>
 
 </manifest>

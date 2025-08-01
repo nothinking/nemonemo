@@ -37,4 +37,12 @@
     </style>
 
     <style name="Theme.Seventh" parent="Base.Theme.Seventh" />
+    
+    <!-- 전체화면 이미지 뷰어용 테마 -->
+    <style name="Theme.Seventh.Fullscreen" parent="Base.Theme.Seventh">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
 </resources>

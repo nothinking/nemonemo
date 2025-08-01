@@ -1,5 +1,6 @@
 package com.example.seventh
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -247,6 +248,8 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
         }
     }
     
+    fun getHistoryList(): List<ScanHistory> = historyList
+    
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         try {
             val view = LayoutInflater.from(parent.context)
@@ -280,6 +283,11 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
                     .load(scanHistory.imageUri)
                     .into(imageView)
                 
+                // 이미지 클릭 이벤트 추가
+                imageView.setOnClickListener {
+                    openFullscreenImage(scanHistory, adapterPosition)
+                }
+                
                 // 태그 표시
                 tagChipGroup.removeAllViews()
                 val tags = scanHistory.tags.split(",").map { it.trim() }
@@ -301,6 +309,31 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
                 Log.d(TAG, "Successfully bound history item: ${scanHistory.id}")
             } catch (e: Exception) {
                 Log.e(TAG, "Error binding history item: ${e.message}", e)
+            }
+        }
+        
+        private fun openFullscreenImage(scanHistory: ScanHistory, position: Int) {
+            try {
+                val context = itemView.context
+                val intent = Intent(context, FullscreenImageActivity::class.java).apply {
+                    // 현재 필터링된 모든 이미지 URI 목록 전달
+                    val allImageUris = ArrayList<String>()
+                    val adapter = itemView.parent?.let { parent ->
+                        (parent as? RecyclerView)?.adapter as? HistoryPagerAdapter
+                    }
+                    adapter?.getHistoryList()?.forEach { history ->
+                        allImageUris.add(history.imageUri)
+                    } ?: run {
+                        // fallback: 현재 이미지만 전달
+                        allImageUris.add(scanHistory.imageUri)
+                    }
+                    putStringArrayListExtra(FullscreenImageActivity.EXTRA_IMAGE_URIS, allImageUris)
+                    putExtra(FullscreenImageActivity.EXTRA_INITIAL_POSITION, position)
+                }
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error opening fullscreen image: ${e.message}", e)
+                Toast.makeText(itemView.context, "이미지를 열 수 없습니다: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

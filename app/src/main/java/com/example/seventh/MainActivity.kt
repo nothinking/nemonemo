@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
             GmsDocumentScannerOptions.Builder()
                 .setResultFormats(GmsDocumentScannerOptions.RESULT_FORMAT_JPEG)
                 .setGalleryImportAllowed(enableGalleryImport)
-                .setScannerMode(GmsDocumentScannerOptions.SCANNER_MODE_FULL)
+                .setScannerMode(GmsDocumentScannerOptions.SCANNER_MODE_BASE)
                 .setPageLimit(1)
 
         GmsDocumentScanning.getClient(options.build())

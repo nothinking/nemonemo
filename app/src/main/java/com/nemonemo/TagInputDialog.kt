@@ -25,7 +25,6 @@ class TagInputDialog : DialogFragment() {
         val cancelButton = view.findViewById<MaterialButton>(R.id.cancel_button)
         
         return AlertDialog.Builder(requireContext())
-            .setTitle("함께 찍은 사람 이름")
             .setView(view)
             .setCancelable(false)
             .create().apply {

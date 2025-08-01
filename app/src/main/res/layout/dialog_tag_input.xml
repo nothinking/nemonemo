@@ -3,34 +3,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="8dp">
+    android:layout_margin="20dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="12dp"
+    app:strokeWidth="3dp"
+    app:strokeColor="@color/pink_light">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="28dp"
+        android:background="@drawable/dialog_background">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tag_input_title"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/pink_primary"
+            android:layout_marginBottom="8dp"
+            android:gravity="center" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/tag_input_description"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface"
-            android:layout_marginBottom="16dp" />
+            android:textSize="16sp"
+            android:textColor="@color/purple_primary"
+            android:layout_marginBottom="20dp"
+            android:gravity="center" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="28dp"
             android:hint="@string/tag_input_hint"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxStrokeColor="@color/purple_primary"
+            app:hintTextColor="@color/purple_primary"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -38,7 +53,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:maxLines="3" />
+                android:maxLines="3"
+                android:textColor="@color/purple_primary" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,22 +62,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="end">
+            android:gravity="center">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancel_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="취소"
-                android:layout_marginEnd="8dp"
-                style="@style/Widget.Material3.Button.TextButton" />
+                android:text="취소 😅"
+                android:textSize="16sp"
+                android:layout_marginEnd="12dp"
+                app:cornerRadius="16dp"
+                app:backgroundTint="@color/yellow_primary"
+                android:textColor="@color/white" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/confirm_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="확인"
-                app:cornerRadius="8dp" />
+                android:text="확인 💕"
+                android:textSize="16sp"
+                app:cornerRadius="16dp"
+                app:backgroundTint="@color/pink_primary"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 

@@ -417,7 +417,7 @@ class HistoryPagerAdapter : RecyclerView.Adapter<HistoryPagerAdapter.HistoryView
                 // 태그 표시
                 val tags = scanHistory.tags.split(",").map { it.trim() }.filter { it.isNotEmpty() }
                 if (tags.isNotEmpty()) {
-                    tagTextView.text = "태그: ${tags.joinToString(", ")}"
+                    tagTextView.text = "함께 찍은 친구: ${tags.joinToString(", ")}"
                     tagTextView.visibility = View.VISIBLE
                 } else {
                     tagTextView.visibility = View.GONE

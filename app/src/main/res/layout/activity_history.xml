@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="@drawable/gradient_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@android:color/transparent"
         android:fitsSystemWindows="true"
-        app:elevation="4dp">
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
@@ -18,8 +18,9 @@
             android:layout_height="?attr/actionBarSize"
             android:minHeight="?attr/actionBarSize"
             app:title="@string/history_title"
-            app:titleTextColor="?attr/colorOnPrimary"
-            app:background="?attr/colorPrimary" />
+            app:titleTextColor="@color/white"
+            app:background="@android:color/transparent"
+            app:elevation="0dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -31,29 +32,33 @@
         android:paddingBottom="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- 태그 필터 섹션 -->
+        <!-- 귀여운 태그 필터 섹션 -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="?attr/colorSurfaceVariant">
+            android:layout_margin="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/purple_light"
+            app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp"
+                android:background="@drawable/filter_card_background">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tag_filter_title"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:layout_marginBottom="8dp" />
+                    android:textColor="@color/purple_primary"
+                    android:layout_marginBottom="12dp"
+                    android:gravity="center" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -65,7 +70,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:singleSelection="true"
-                        app:selectionRequired="true" />
+                        app:selectionRequired="true"
+                        app:chipBackgroundColor="@color/purple_light"
+                        app:chipStrokeColor="@color/purple_primary"
+                        app:chipStrokeWidth="2dp" />
 
                 </HorizontalScrollView>
 
@@ -84,47 +92,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+            <!-- 귀여운 빈 상태 카드 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/empty_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="32dp"
+                android:layout_margin="40dp"
                 android:visibility="gone"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp">
+                app:cardCornerRadius="24dp"
+                app:cardElevation="12dp"
+                app:strokeWidth="3dp"
+                app:strokeColor="@color/pink_light">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="32dp"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:src="@android:drawable/ic_menu_gallery"
-                        android:contentDescription="빈 히스토리"
-                        android:alpha="0.5"
-                        android:layout_marginBottom="16dp" />
+                    android:padding="40dp"
+                    android:gravity="center"
+                    android:background="@drawable/empty_card_background">
 
                     <TextView
                         android:id="@+id/empty_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/empty_history_message"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
+                        android:textColor="@color/pink_primary"
                         android:gravity="center"
-                        android:layout_marginBottom="8dp" />
+                        android:layout_marginBottom="12dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/empty_history_subtitle"
-                        android:textSize="14sp"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="16sp"
+                        android:textColor="@color/purple_primary"
                         android:gravity="center" />
 
                 </LinearLayout>

@@ -3,15 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="8dp">
+    android:layout_margin="20dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="12dp"
+    app:strokeWidth="3dp"
+    app:strokeColor="@color/pink_light">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp"
+        android:background="@drawable/history_item_background">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -23,70 +26,79 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitCenter"
-                android:contentDescription="스캔된 이미지"
-                android:background="@android:color/transparent"
-                android:padding="8dp" />
+                android:contentDescription="샤방샤방한 포토부스 사진 ✨"
+                android:background="@drawable/history_image_background"
+                android:padding="12dp" />
 
+            <!-- 귀여운 공유 버튼 -->
             <ImageButton
                 android:id="@+id/share_button"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                android:layout_margin="8dp"
-                android:src="@drawable/ic_share"
-                android:background="@android:color/transparent"
-                android:tint="?attr/colorOnSurfaceVariant"
-                android:contentDescription="공유"
+                android:layout_margin="12dp"
+                android:src="@drawable/ic_share_cute"
+                android:background="@drawable/circle_button_background"
+                android:tint="@color/white"
+                android:contentDescription="공유하기 💕"
                 android:scaleType="fitCenter"
-                android:padding="2dp" />
+                android:padding="4dp" />
 
+            <!-- 귀여운 삭제 버튼 -->
             <ImageButton
                 android:id="@+id/delete_button"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_toStartOf="@id/share_button"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginEnd="8dp"
-                android:src="@android:drawable/ic_menu_delete"
-                android:background="@android:color/transparent"
-                android:tint="?attr/colorOnSurfaceVariant"
-                android:contentDescription="삭제"
+                android:src="@drawable/ic_delete_cute"
+                android:background="@drawable/circle_button_background_red"
+                android:tint="@color/white"
+                android:contentDescription="삭제하기 😢"
                 android:scaleType="fitCenter"
-                android:padding="2dp" />
+                android:padding="4dp" />
 
         </RelativeLayout>
 
+        <!-- 귀여운 정보 카드 -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="?attr/colorSurfaceVariant">
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/purple_light"
+            app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="12dp">
+                android:padding="16dp"
+                android:background="@drawable/info_card_background">
 
                 <TextView
                     android:id="@+id/tag_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:layout_marginBottom="8dp" />
+                    android:textSize="14sp"
+                    android:textColor="@color/purple_primary"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/history_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="스캔 날짜: "
-                    android:textSize="14sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:text="📅 촬영 날짜: "
+                    android:textSize="16sp"
+                    android:textColor="@color/blue_primary"
+                    android:gravity="center" />
 
             </LinearLayout>
 

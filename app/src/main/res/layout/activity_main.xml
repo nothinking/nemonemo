@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="@drawable/gradient_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@android:color/transparent"
         android:fitsSystemWindows="true"
-        app:elevation="4dp">
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
@@ -18,8 +18,9 @@
             android:layout_height="?attr/actionBarSize"
             android:minHeight="?attr/actionBarSize"
             app:title="@string/app_title"
-            app:titleTextColor="?attr/colorOnPrimary"
-            app:background="?attr/colorPrimary" />
+            app:titleTextColor="@color/white"
+            app:background="@android:color/transparent"
+            app:elevation="0dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -35,80 +36,96 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
+            <!-- 귀여운 소개 카드 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/pink_light">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="28dp"
+                    android:background="@drawable/card_gradient_background">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/app_description"
-                        android:textSize="18sp"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="8dp" />
+                        android:textColor="@color/white"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/app_subtitle"
-                        android:textSize="14sp"
-                        android:textColor="?android:attr/textColorSecondary" />
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:alpha="0.9"
+                        android:gravity="center" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- 포토부스 찍기 버튼 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/scan_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="onScanButtonClicked"
                 android:text="@string/scan_button"
-                android:textSize="16sp"
-                android:padding="16dp"
-                app:icon="@android:drawable/ic_menu_camera"
-                app:iconGravity="textStart"
-                app:cornerRadius="12dp" />
+                android:textSize="18sp"
+                android:padding="20dp"
+                android:layout_marginBottom="16dp"
+                app:cornerRadius="16dp"
+                app:backgroundTint="@color/pink_primary"
+                android:textColor="@color/white"
+                app:elevation="6dp" />
 
+            <!-- 갤러리에서 가져오기 버튼 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/gallery_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="onGalleryButtonClicked"
                 android:text="@string/gallery_button"
-                android:textSize="16sp"
-                android:padding="16dp"
-                android:layout_marginTop="8dp"
-                app:icon="@android:drawable/ic_menu_gallery"
-                app:iconGravity="textStart"
-                app:cornerRadius="12dp"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
+                android:textSize="18sp"
+                android:padding="20dp"
+                android:layout_marginBottom="24dp"
+                app:cornerRadius="16dp"
+                app:backgroundTint="@color/purple_primary"
+                android:textColor="@color/white"
+                app:elevation="6dp" />
 
+            <!-- 결과 카드 -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/result_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:visibility="gone"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/blue_light">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="20dp"
+                    android:background="@drawable/result_card_background">
 
                     <ImageView
                         android:id="@+id/first_page_view"
@@ -116,19 +133,20 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/first_page_view"
                         android:scaleType="fitCenter"
-                        android:background="@android:color/transparent"
-                        android:padding="8dp" />
+                        android:background="@drawable/image_background"
+                        android:padding="12dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="16dp">
+                        android:layout_marginTop="20dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="12dp">
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/save_to_gallery_button"
@@ -138,8 +156,9 @@
                                 android:text="@string/save_to_gallery"
                                 android:visibility="gone"
                                 android:layout_marginEnd="8dp"
-                                app:icon="@android:drawable/ic_menu_save"
-                                style="@style/Widget.Material3.Button.OutlinedButton" />
+                                app:cornerRadius="12dp"
+                                app:backgroundTint="@color/mint_primary"
+                                android:textColor="@color/white" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/save_to_history_button"
@@ -149,8 +168,9 @@
                                 android:text="@string/save_to_history"
                                 android:visibility="gone"
                                 android:layout_marginStart="8dp"
-                                app:icon="@android:drawable/ic_menu_edit"
-                                style="@style/Widget.Material3.Button.OutlinedButton" />
+                                app:cornerRadius="12dp"
+                                app:backgroundTint="@color/orange_primary"
+                                android:textColor="@color/white" />
 
                         </LinearLayout>
 
@@ -160,9 +180,9 @@
                             android:layout_height="wrap_content"
                             android:text="취소"
                             android:visibility="gone"
-                            android:layout_marginTop="8dp"
-                            app:icon="@android:drawable/ic_menu_close_clear_cancel"
-                            style="@style/Widget.Material3.Button.OutlinedButton" />
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="@color/yellow_primary"
+                            android:textColor="@color/white" />
 
                     </LinearLayout>
 
@@ -170,29 +190,34 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- 추억 보기 버튼 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/history_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/view_history"
-                android:layout_marginTop="16dp"
-                app:icon="@android:drawable/ic_menu_recent_history"
-                app:iconGravity="textStart"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
+                android:layout_marginTop="24dp"
+                app:cornerRadius="16dp"
+                app:backgroundTint="@color/blue_primary"
+                android:textColor="@color/white"
+                app:elevation="6dp" />
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
+    <!-- 귀여운 플로팅 액션 버튼 -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_scan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:layout_marginBottom="96dp"
+        android:layout_margin="20dp"
+        android:layout_marginBottom="100dp"
         android:onClick="onScanButtonClicked"
-        app:srcCompat="@android:drawable/ic_menu_camera"
-        app:tint="@android:color/white" />
+        app:srcCompat="@drawable/ic_camera_emoji"
+        app:tint="@color/white"
+        app:backgroundTint="@color/pink_primary"
+        app:elevation="8dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

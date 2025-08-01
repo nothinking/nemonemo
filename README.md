@@ -6,6 +6,8 @@
 
 NEMONEMO는 포토부스에서 나온 인쇄 사진을 스마트폰으로 촬영하여 디지털로 저장하고, 함께 찍은 사람들의 이름을 태그로 관리할 수 있는 앱입니다.
 
+🌐 **소개 페이지**: [https://nothinking.github.io/nemonemo/](https://nothinking.github.io/nemonemo/)
+
 ### 주요 기능
 
 - 📷 **포토부스 사진 촬영**: ML Kit Document Scanner를 사용한 고품질 사진 촬영

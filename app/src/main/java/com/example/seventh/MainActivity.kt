@@ -14,6 +14,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.MaterialToolbar
@@ -51,6 +54,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // 시스템 UI 설정
+        setupSystemUI()
 
         // Material Toolbar 설정
         val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar)
@@ -92,6 +98,36 @@ class MainActivity : AppCompatActivity() {
 
         scannerLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             handleActivityResult(result)
+        }
+    }
+
+    private fun setupSystemUI() {
+        // Edge-to-edge 디스플레이 설정
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        
+        // 시스템 UI 컨트롤러 설정
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.isAppearanceLightStatusBars = false
+        windowInsetsController.isAppearanceLightNavigationBars = false
+        
+        // WindowInsets 리스너 설정
+        window.decorView.setOnApplyWindowInsetsListener { view, windowInsets ->
+            val insets = WindowInsetsCompat.toWindowInsetsCompat(windowInsets)
+            val navigationBarHeight = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            
+            // 하단 패딩을 동적으로 조정
+            val nestedScrollView = findViewById<androidx.core.widget.NestedScrollView>(R.id.nested_scroll_view)
+            nestedScrollView?.setPadding(0, 0, 0, navigationBarHeight + 16)
+            
+            // FAB 위치 조정
+            val fab = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fab_scan)
+            fab?.let {
+                val layoutParams = it.layoutParams as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
+                layoutParams.bottomMargin = navigationBarHeight + 16
+                it.layoutParams = layoutParams
+            }
+            
+            view.onApplyWindowInsets(windowInsets)
         }
     }
 

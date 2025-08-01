@@ -13,6 +13,9 @@ import android.widget.Toast
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +28,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
@@ -50,6 +54,9 @@ class HistoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
+        
+        // 시스템 UI 설정
+        setupSystemUI()
         
         try {
             // Material Toolbar 설정
@@ -90,6 +97,28 @@ class HistoryActivity : AppCompatActivity() {
             Log.e(TAG, "Error in onCreate: ${e.message}", e)
             Toast.makeText(this, "히스토리 화면을 불러오는 중 오류가 발생했습니다: ${e.message}", Toast.LENGTH_LONG).show()
             finish()
+        }
+    }
+
+    private fun setupSystemUI() {
+        // Edge-to-edge 디스플레이 설정
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        
+        // 시스템 UI 컨트롤러 설정
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.isAppearanceLightStatusBars = false
+        windowInsetsController.isAppearanceLightNavigationBars = false
+        
+        // WindowInsets 리스너 설정
+        window.decorView.setOnApplyWindowInsetsListener { view, windowInsets ->
+            val insets = WindowInsetsCompat.toWindowInsetsCompat(windowInsets)
+            val navigationBarHeight = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            
+            // 메인 레이아웃에 하단 패딩 추가
+            val mainLayout = findViewById<LinearLayout>(R.id.main_layout)
+            mainLayout?.setPadding(0, 0, 0, navigationBarHeight + 16)
+            
+            view.onApplyWindowInsets(windowInsets)
         }
     }
     

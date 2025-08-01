@@ -152,6 +152,11 @@ class MainActivity : AppCompatActivity() {
         saveToGalleryButton.visibility = View.GONE
         saveToHistoryButton.visibility = View.GONE
         cancelButton.visibility = View.GONE
+        
+        // save_to_history_button의 패딩을 원래대로 복원
+        val layoutParams = saveToHistoryButton.layoutParams as android.widget.LinearLayout.LayoutParams
+        layoutParams.marginStart = resources.getDimensionPixelSize(R.dimen.button_margin_start)
+        saveToHistoryButton.layoutParams = layoutParams
 
         val options =
             GmsDocumentScannerOptions.Builder()
@@ -226,11 +231,18 @@ class MainActivity : AppCompatActivity() {
                 val imageUri = pages[0].imageUri
                 Log.d(TAG, "Image URI: $imageUri")
                 currentScannedImageUri = imageUri
+                isFromGallery = false
                 Glide.with(this).load(imageUri).into(firstPageView)
                 saveToGalleryButton.visibility = View.VISIBLE
                 saveToHistoryButton.visibility = View.VISIBLE
                 cancelButton.visibility = View.VISIBLE
                 resultCard.visibility = View.VISIBLE
+                
+                // 포토부스에서 찍은 경우 save_to_history_button의 왼쪽 패딩 복원
+                val layoutParams = saveToHistoryButton.layoutParams as android.widget.LinearLayout.LayoutParams
+                layoutParams.marginStart = resources.getDimensionPixelSize(R.dimen.button_margin_start)
+                saveToHistoryButton.layoutParams = layoutParams
+                
                 Log.d(TAG, "Result card and buttons made visible")
             } else {
                 Log.w(TAG, "No pages found in scan result")
@@ -256,11 +268,17 @@ class MainActivity : AppCompatActivity() {
             currentScannedImageUri = it
             isFromGallery = true
             Glide.with(this).load(it).into(firstPageView)
-                    // 갤러리에서 불러온 이미지는 갤러리에 저장 버튼 숨김
-        saveToGalleryButton.visibility = View.GONE
-        saveToHistoryButton.visibility = View.VISIBLE
-        cancelButton.visibility = View.VISIBLE
-        resultCard.visibility = View.VISIBLE
+            // 갤러리에서 불러온 이미지는 갤러리에 저장 버튼 숨김
+            saveToGalleryButton.visibility = View.GONE
+            saveToHistoryButton.visibility = View.VISIBLE
+            cancelButton.visibility = View.VISIBLE
+            resultCard.visibility = View.VISIBLE
+            
+            // 갤러리에서 가져온 경우 save_to_history_button의 왼쪽 패딩 제거
+            val layoutParams = saveToHistoryButton.layoutParams as android.widget.LinearLayout.LayoutParams
+            layoutParams.marginStart = 0
+            saveToHistoryButton.layoutParams = layoutParams
+            
             Toast.makeText(this, "갤러리에서 이미지를 불러왔습니다.", Toast.LENGTH_SHORT).show()
         } ?: run {
             Toast.makeText(this, "갤러리에서 이미지를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
@@ -352,6 +370,11 @@ class MainActivity : AppCompatActivity() {
         
         // 결과 카드 숨기기
         resultCard.visibility = View.GONE
+        
+        // save_to_history_button의 패딩을 원래대로 복원
+        val layoutParams = saveToHistoryButton.layoutParams as android.widget.LinearLayout.LayoutParams
+        layoutParams.marginStart = resources.getDimensionPixelSize(R.dimen.button_margin_start)
+        saveToHistoryButton.layoutParams = layoutParams
     }
 
     companion object {

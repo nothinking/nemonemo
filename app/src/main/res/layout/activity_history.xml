@@ -13,7 +13,7 @@
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="스캔 히스토리"
+            app:title="@string/history_title"
             app:titleTextColor="@android:color/white"
             app:navigationIcon="@android:drawable/ic_menu_revert"
             app:navigationIconTint="@android:color/white" />
@@ -44,7 +44,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="태그 필터"
+                    android:text="@string/tag_filter_title"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="?attr/colorOnSurfaceVariant"
@@ -108,7 +108,7 @@
                         android:id="@+id/empty_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="스캔 히스토리가 없습니다."
+                        android:text="@string/empty_history_message"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:gravity="center"
@@ -117,7 +117,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="문서를 스캔하면 여기에 표시됩니다."
+                        android:text="@string/empty_history_subtitle"
                         android:textSize="14sp"
                         android:textColor="?android:attr/textColorSecondary"
                         android:gravity="center" />

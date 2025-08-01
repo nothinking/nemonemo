@@ -25,7 +25,7 @@ class TagInputDialog : DialogFragment() {
         val cancelButton = view.findViewById<Button>(R.id.cancel_button)
         
         return AlertDialog.Builder(requireContext())
-            .setTitle("태그 입력")
+            .setTitle("함께 찍은 사람 이름")
             .setView(view)
             .setCancelable(false)
             .create().apply {
@@ -36,7 +36,7 @@ class TagInputDialog : DialogFragment() {
                         onTagsConfirmed?.invoke(tags)
                         dismiss()
                     } else {
-                        tagEditText.error = "태그를 입력해주세요"
+                        tagEditText.error = "함께 찍은 사람의 이름을 입력해주세요"
                     }
                 }
                 

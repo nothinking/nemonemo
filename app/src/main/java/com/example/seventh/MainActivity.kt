@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity() {
         resultCard.visibility = View.VISIBLE
         
         Log.d(TAG, "Test scan result displayed successfully")
-        Toast.makeText(this, "테스트 스캔 결과가 표시되었습니다", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "테스트 포토부스 사진이 표시되었습니다", Toast.LENGTH_SHORT).show()
     }
 
     private fun handleActivityResult(activityResult: ActivityResult) {
@@ -240,7 +240,7 @@ class MainActivity : AppCompatActivity() {
             database.scanHistoryDao().insertScanHistory(scanHistory)
             
             runOnUiThread {
-                Toast.makeText(this@MainActivity, "히스토리에 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "포토부스 추억에 저장되었습니다.", Toast.LENGTH_SHORT).show()
                 saveToHistoryButton.visibility = View.GONE
             }
         }

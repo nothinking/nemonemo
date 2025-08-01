@@ -1,10 +1,24 @@
 <resources>
-    <string name="app_name" translatable="false">Document Scanner Demo</string>
-    <string name="scan_button" translatable="false">Scan</string>
-    <string name="error_scanner_cancelled" translatable="false">Scanner is cancelled.</string>
-    <string name="error_default_message" translatable="false">Failed to scan: %1$s</string>
+    <string name="app_name" translatable="false">NEMONEMO</string>
+    <string name="scan_button" translatable="false">포토부스 사진 촬영</string>
+    <string name="error_scanner_cancelled" translatable="false">촬영이 취소되었습니다.</string>
+    <string name="error_default_message" translatable="false">촬영에 실패했습니다: %1$s</string>
     <string name="label_mode_selector" translatable="false">Scanner feature mode: </string>
     <string name="label_enable_gallery_import" translatable="false">Enable gallery import: </string>
     <string name="label_set_page_limit" translatable="false">Set page limit per scan: </string>
-    <string name="first_page_view" translatable="false">First page of the scanned document</string>
+    <string name="first_page_view" translatable="false">촬영된 포토부스 사진</string>
+    <string name="app_title" translatable="false">NEMONEMO</string>
+    <string name="app_description" translatable="false">포토부스 사진을 디지털화하여 소중한 추억을 보관하세요</string>
+    <string name="app_subtitle" translatable="false">포토부스에서 나온 인쇄 사진을 스마트폰으로 촬영하여 디지털로 저장하고, 함께 찍은 사람들의 이름을 태그로 관리할 수 있습니다.</string>
+    <string name="history_title" translatable="false">포토부스 추억</string>
+    <string name="tag_input_title" translatable="false">함께 찍은 사람 이름</string>
+    <string name="tag_input_hint" translatable="false">예: 민수, 영희, 철수, 지영 등</string>
+    <string name="tag_input_description" translatable="false">이 포토부스 사진에 함께 찍힌 사람들의 이름을 입력해주세요</string>
+    <string name="save_to_gallery" translatable="false">갤러리에 저장</string>
+    <string name="save_to_history" translatable="false">추억에 저장</string>
+    <string name="view_history" translatable="false">추억 보기</string>
+    <string name="empty_history_message" translatable="false">포토부스 추억이 없습니다.</string>
+    <string name="empty_history_subtitle" translatable="false">포토부스 사진을 촬영하면 여기에 표시됩니다.</string>
+    <string name="tag_filter_title" translatable="false">함께 찍은 사람 필터</string>
+    <string name="scan_date_label" translatable="false">촬영 날짜: </string>
 </resources>

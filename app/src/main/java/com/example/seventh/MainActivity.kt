@@ -16,6 +16,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.card.MaterialCardView
 import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanning
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult
@@ -27,21 +29,20 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import java.io.IOException
-import android.view.GestureDetector // GestureDetector 추가
-import android.view.MotionEvent // MotionEvent 추가
-//import androidx.compose.ui.graphics.vector.path
-//import androidx.compose.ui.semantics.text
-import androidx.core.view.GestureDetectorCompat // GestureDetectorCompat 추가
-//import androidx.glance.visibility
+import android.view.GestureDetector
+import android.view.MotionEvent
+import androidx.core.view.GestureDetectorCompat
 import com.example.seventh.data.AppDatabase
 import com.example.seventh.data.ScanHistory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
     private lateinit var resultInfo: TextView
     private lateinit var firstPageView: ImageView
+    private lateinit var resultCard: MaterialCardView
     private lateinit var scannerLauncher: ActivityResultLauncher<IntentSenderRequest>
     private var enableGalleryImport = true
 
@@ -54,26 +55,28 @@ class MainActivity : AppCompatActivity() {
     // 트리플 탭 감지를 위한 변수
     private lateinit var gestureDetector: GestureDetectorCompat
     private var tripleTapCounter = 0
-    private val TRIPLE_TAP_TIMEOUT = 500L // 밀리초 단위, 세 번의 탭 사이의 최대 시간 간격
+    private val TRIPLE_TAP_TIMEOUT = 500L
     private var lastTapTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Material Toolbar 설정
+        val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar)
+        setSupportActionBar(toolbar)
+
         resultInfo = findViewById(R.id.result_info)
         firstPageView = findViewById(R.id.first_page_view)
+        resultCard = findViewById(R.id.result_card)
         saveToGalleryButton = findViewById(R.id.save_to_gallery_button)
         saveToHistoryButton = findViewById(R.id.save_to_history_button)
         historyButton = findViewById(R.id.history_button)
         database = AppDatabase.getDatabase(this)
 
-        // 초기에는 resultInfo를 숨김
-        resultInfo.visibility = View.GONE
+        // 초기에는 resultCard를 숨김
+        resultCard.visibility = View.GONE
 
-        saveToGalleryButton.visibility = View.GONE
-        saveToHistoryButton.visibility = View.GONE
-        
         saveToGalleryButton.setOnClickListener {
             currentScannedImageUri?.let { uri ->
                 try {
@@ -103,7 +106,6 @@ class MainActivity : AppCompatActivity() {
         // GestureDetector 초기화
         gestureDetector = GestureDetectorCompat(this, object : GestureDetector.SimpleOnGestureListener() {
             override fun onDown(e: MotionEvent): Boolean {
-                // onDown은 항상 true를 반환해야 이벤트를 계속 받을 수 있음
                 return true
             }
 
@@ -112,42 +114,33 @@ class MainActivity : AppCompatActivity() {
                 if (currentTime - lastTapTime < TRIPLE_TAP_TIMEOUT) {
                     tripleTapCounter++
                 } else {
-                    // 시간 간격이 너무 길면 카운터 초기화
                     tripleTapCounter = 1
                 }
                 lastTapTime = currentTime
 
                 if (tripleTapCounter == 3) {
-                    resultInfo.visibility = if (resultInfo.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-                    tripleTapCounter = 0 // 카운터 초기화
-                    if (resultInfo.visibility == View.VISIBLE) {
-                        Toast.makeText(this@MainActivity, "Result Info 표시", Toast.LENGTH_SHORT).show()
+                    resultCard.visibility = if (resultCard.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+                    tripleTapCounter = 0
+                    if (resultCard.visibility == View.VISIBLE) {
+                        Toast.makeText(this@MainActivity, "스캔 결과 표시", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(this@MainActivity, "Result Info 숨김", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "스캔 결과 숨김", Toast.LENGTH_SHORT).show()
                     }
                 }
                 return true
             }
         })
 
-        // 최상위 뷰 또는 터치 이벤트를 감지할 뷰에 OnTouchListener 설정
-        // 예를 들어, activity_main.xml의 루트 레이아웃 ID가 'root_layout'이라고 가정
-        val rootView = findViewById<View>(android.R.id.content) // 또는 특정 레이아웃 ID
+        val rootView = findViewById<View>(android.R.id.content)
         rootView.setOnTouchListener { _, event ->
             gestureDetector.onTouchEvent(event)
-            // true를 반환하면 다른 뷰로 터치 이벤트가 전달되지 않을 수 있으므로 주의
-            // 여기서는 다른 뷰의 클릭 이벤트 등을 방해하지 않기 위해 false 또는 gestureDetector의 결과를 반환할 수 있음
-            // 하지만 onDown에서 true를 반환했으므로, 여기서는 gestureDetector가 처리하도록 둡니다.
-            true // 모든 터치 이벤트를 gestureDetector가 소모하도록 함
+            true
         }
     }
 
-    // onScanButtonClicked, handleActivityResult, saveImageToGallery, TAG 등은 이전과 동일하게 유지
-
     @Suppress("UNUSED_PARAMETER")
     fun onScanButtonClicked(unused: View) {
-        // resultInfo.text = null // resultInfo가 숨겨져 있을 수 있으므로, 텍스트 초기화는 필요에 따라 조정
-        if (resultInfo.visibility == View.VISIBLE) { // 보이는 경우에만 텍스트 초기화
+        if (resultCard.visibility == View.VISIBLE) {
             resultInfo.text = null
         }
         Glide.with(this).clear(firstPageView)
@@ -169,60 +162,85 @@ class MainActivity : AppCompatActivity() {
             }
             .addOnFailureListener() { e: Exception ->
                 val errorMessage = getString(R.string.error_default_message, e.message)
-                if (resultInfo.visibility == View.VISIBLE) {
+                if (resultCard.visibility == View.VISIBLE) {
                     resultInfo.text = errorMessage
                 } else {
-                    // resultInfo가 숨겨져 있을 때는 Toast 등으로 오류를 알릴 수 있습니다.
                     Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
                 }
             }
+    }
+
+    // 테스트용 메서드 - 스캔 결과 시뮬레이션
+    @Suppress("UNUSED_PARAMETER")
+    fun onTestScanClicked(unused: View) {
+        Log.d(TAG, "Test scan clicked - simulating scan result")
+        
+        // 테스트용 이미지 URI 생성 (실제로는 존재하지 않는 URI)
+        val testImageUri = Uri.parse("content://com.example.seventh.test/scanned_image.jpg")
+        currentScannedImageUri = testImageUri
+        
+        // 테스트용 이미지 로드 (기본 이미지 사용)
+        Glide.with(this)
+            .load(R.drawable.ic_launcher_foreground)
+            .into(firstPageView)
+        
+        // 결과 정보 설정
+        resultInfo.text = "테스트 스캔 완료 - 스캔된 페이지: 1개"
+        
+        // 버튼들 표시
+        saveToGalleryButton.visibility = View.VISIBLE
+        saveToHistoryButton.visibility = View.VISIBLE
+        resultCard.visibility = View.VISIBLE
+        
+        Log.d(TAG, "Test scan result displayed successfully")
+        Toast.makeText(this, "테스트 스캔 결과가 표시되었습니다", Toast.LENGTH_SHORT).show()
     }
 
     private fun handleActivityResult(activityResult: ActivityResult) {
         val resultCode = activityResult.resultCode
         val result = GmsDocumentScanningResult.fromActivityResultIntent(activityResult.data)
 
+        Log.d(TAG, "handleActivityResult: resultCode=$resultCode, result=$result")
+
         currentScannedImageUri = null
         saveToGalleryButton.visibility = View.GONE
         saveToHistoryButton.visibility = View.GONE
+        resultCard.visibility = View.GONE
         Glide.with(this).clear(firstPageView)
 
         if (resultCode == Activity.RESULT_OK && result != null) {
+            Log.d(TAG, "Scan successful, processing result")
             val scanResultText = getString(R.string.scan_result, result)
-            if (resultInfo.visibility == View.VISIBLE) {
-                resultInfo.text = scanResultText
-            } else if (resultInfo.text == null) { // 처음 resultInfo가 숨겨진 상태에서 성공했을 때
-                resultInfo.text = scanResultText // 내용을 설정해두고, 나중에 보이게 할 때 표시되도록
-            }
-
+            resultInfo.text = scanResultText
 
             val pages = result.pages
+            Log.d(TAG, "Pages: $pages, size: ${pages?.size}")
+            
             if (pages != null && pages.isNotEmpty()) {
                 val imageUri = pages[0].imageUri
+                Log.d(TAG, "Image URI: $imageUri")
                 currentScannedImageUri = imageUri
                 Glide.with(this).load(imageUri).into(firstPageView)
                 saveToGalleryButton.visibility = View.VISIBLE
                 saveToHistoryButton.visibility = View.VISIBLE
+                resultCard.visibility = View.VISIBLE
+                Log.d(TAG, "Result card and buttons made visible")
+            } else {
+                Log.w(TAG, "No pages found in scan result")
             }
 
             result.pdf?.uri?.path?.let { path ->
                 val externalUri = FileProvider.getUriForFile(this, packageName + ".provider", File(path))
-                // PDF 공유 로직 (필요시 사용)
+                Log.d(TAG, "PDF path: $path")
             }
         } else if (resultCode == Activity.RESULT_CANCELED) {
+            Log.d(TAG, "Scan cancelled by user")
             val cancelMessage = getString(R.string.error_scanner_cancelled)
-            if (resultInfo.visibility == View.VISIBLE) {
-                resultInfo.text = cancelMessage
-            } else {
-                Toast.makeText(this, cancelMessage, Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(this, cancelMessage, Toast.LENGTH_SHORT).show()
         } else {
+            Log.w(TAG, "Scan failed with resultCode: $resultCode")
             val defaultErrorMessage = getString(R.string.error_default_message)
-            if (resultInfo.visibility == View.VISIBLE) {
-                resultInfo.text = defaultErrorMessage
-            } else {
-                Toast.makeText(this, defaultErrorMessage, Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(this, defaultErrorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 

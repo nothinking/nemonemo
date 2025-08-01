@@ -1,61 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/scan_button"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="문서 스캐너"
+            app:titleTextColor="@android:color/white" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="문서를 스캔하여 디지털화하세요"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="카메라를 사용하여 문서, 영수증, 명함 등을 스캔하고 갤러리에 저장하거나 히스토리에 보관할 수 있습니다."
+                        android:textSize="14sp"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/scan_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onScanButtonClicked"
+                android:text="@string/scan_button"
+                android:textSize="16sp"
+                android:padding="16dp"
+                app:icon="@android:drawable/ic_menu_camera"
+                app:iconGravity="textStart"
+                app:cornerRadius="12dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/result_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/result_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <ImageView
+                        android:id="@+id/first_page_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/first_page_view"
+                        android:scaleType="fitCenter"
+                        android:background="@android:color/white"
+                        android:padding="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/save_to_gallery_button"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="갤러리에 저장"
+                            android:visibility="gone"
+                            android:layout_marginEnd="8dp"
+                            app:icon="@android:drawable/ic_menu_save"
+                            style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/save_to_history_button"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="히스토리에 저장"
+                            android:visibility="gone"
+                            android:layout_marginStart="8dp"
+                            app:icon="@android:drawable/ic_menu_edit"
+                            style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/history_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="스캔 히스토리 보기"
+                android:layout_marginTop="16dp"
+                app:icon="@android:drawable/ic_menu_recent_history"
+                app:iconGravity="textStart"
+                style="@style/Widget.Material3.Button.OutlinedButton" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_scan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
         android:onClick="onScanButtonClicked"
-        android:text="@string/scan_button" />
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        app:tint="@android:color/white" />
 
-    <TextView
-        android:id="@+id/result_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="" />
-
-    <ImageView
-        android:id="@+id/first_page_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/first_page_view"
-        android:scaleType="fitCenter" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp">
-
-        <Button
-            android:id="@+id/save_to_gallery_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="갤러리에 저장하기"
-            android:visibility="gone"
-            android:layout_marginEnd="8dp"/>
-
-        <Button
-            android:id="@+id/save_to_history_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="히스토리에 저장하기"
-            android:visibility="gone"
-            android:layout_marginStart="8dp"/>
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/history_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="스캔 히스토리 보기"
-        android:layout_marginTop="16dp"/>
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
